@@ -15,6 +15,7 @@ import android.net.wifi.WifiManager;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
+import android.telephony.TelephonyManager;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -56,6 +57,7 @@ public class MainActivity extends AppCompatActivity {
             android.Manifest.permission.ACCESS_NETWORK_STATE,
             android.Manifest.permission.WRITE_EXTERNAL_STORAGE,
             android.Manifest.permission.READ_EXTERNAL_STORAGE,
+            android.Manifest.permission.READ_PHONE_STATE
     };
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -147,6 +149,8 @@ public class MainActivity extends AppCompatActivity {
         Date currentTime;
         String externalStorageState;
         String header;
+        TelephonyManager telephonyManager;
+        String IMEI;
 
         externalStorageState = Environment.getExternalStorageState();
         if (!Environment.MEDIA_MOUNTED.equals(externalStorageState)) {
@@ -159,7 +163,9 @@ public class MainActivity extends AppCompatActivity {
         }
 
         currentTime = Calendar.getInstance().getTime();
-        filename = "DISTANCE_CALIBRATION_" + currentTime.toString() + ".txt";
+        telephonyManager = (TelephonyManager) getSystemService(this.TELEPHONY_SERVICE);
+        IMEI = telephonyManager.getDeviceId();
+        filename = "DISTANCE_CALIBRATION_" + IMEI + "_" +  currentTime.toString() + ".txt";
         filename = filename.replace(" ", "");
 
         outFile = new File(LOG_PATH, filename);
